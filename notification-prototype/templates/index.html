@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Send Notification - Galaxy Dashboard{% endblock %}
+
+{% block content %}
+<section>
+    <div class="section-header">
+        <h2>Send a Simulated Notification</h2>
+        <p>Compose multi-source simulated notifications with custom app platforms and delivery channels.</p>
+    </div>
+
+    <form action="{{ url_for('create_notification') }}" method="POST" novalidate>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+            <div class="form-group">
+                <label for="app_source">Application Source <span class="required-star">*</span></label>
+                <div class="form-help">Select the origin platform/category</div>
+                <select id="app_source" name="app_source" required>
+                    <option value="YouTube" {% if app_source|default('YouTube', true) == 'YouTube' %}selected{% endif %}>YouTube &mdash; Video & Channel Alerts</option>
+                    <option value="WhatsApp" {% if app_source|default('', true) == 'WhatsApp' %}selected{% endif %}>WhatsApp &mdash; Direct & Group Chats</option>
+                    <option value="Gmail" {% if app_source|default('', true) == 'Gmail' %}selected{% endif %}>Gmail / Email &mdash; Inbox & Security</option>
+                    <option value="Instagram" {% if app_source|default('', true) == 'Instagram' %}selected{% endif %}>Instagram &mdash; Social & Likes</option>
+                    <option value="Discord" {% if app_source|default('', true) == 'Discord' %}selected{% endif %}>Discord &mdash; Server Mentions & DMs</option>
+                    <option value="GitHub" {% if app_source|default('', true) == 'GitHub' %}selected{% endif %}>GitHub &mdash; PRs, Issues & Commits</option>
+                    <option value="Calendar" {% if app_source|default('', true) == 'Calendar' %}selected{% endif %}>Calendar &mdash; Meetings & Reminders</option>
+                    <option value="System" {% if app_source|default('', true) == 'System' %}selected{% endif %}>General / System &mdash; OS & Updates</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="channel">Delivery Channel <span class="required-star">*</span></label>
+                <div class="form-help">Choose simulation protocol</div>
+                <select id="channel" name="channel" required>
+                    <option value="EMAIL" {% if channel|default('EMAIL', true) == 'EMAIL' %}selected{% endif %}>EMAIL &mdash; Simulated Email Delivery</option>
+                    <option value="SMS" {% if channel|default('', true) == 'SMS' %}selected{% endif %}>SMS &mdash; Simulated Text Message</option>
+                    <option value="PUSH" {% if channel|default('', true) == 'PUSH' %}selected{% endif %}>PUSH &mdash; Simulated Push Notification</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="recipient">Recipient <span class="required-star">*</span></label>
+            <div class="form-help">Email address, phone number (+1234567890), or handle/device token</div>
+            <input
+                type="text"
+                id="recipient"
+                name="recipient"
+                value="{{ recipient|default('', true) }}"
+                placeholder="e.g. user@example.com or +1 (555) 0192"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Subject <span class="required-star">*</span></label>
+            <div class="form-help">Notification title or headline</div>
+            <input
+                type="text"
+                id="subject"
+                name="subject"
+                value="{{ subject|default('', true) }}"
+                placeholder="e.g. Marques Brownlee uploaded a new video"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="body">Message Body <span class="required-star">*</span></label>
+            <div class="form-help">Full notification message to be simulated and stored</div>
+            <textarea
+                id="body"
+                name="body"
+                rows="4"
+                placeholder="e.g. The Ultimate Smartphone Review is live. Watch the camera showdown now."
+                required
+            >{{ body|default('', true) }}</textarea>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn">
+                <svg style="width: 17px; height: 17px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                <span>Send Notification</span>
+            </button>
+            <a href="{{ url_for('list_notifications') }}" class="btn btn-secondary">
+                View Notification History
+            </a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Notification System Prototype{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="brand-wrapper">
+                <div class="brand-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Notification Prototype</h1>
+                    <p class="tagline">Galaxy Dashboard &bull; Multi-Source Notification Center</p>
+                </div>
+            </div>
+            <nav aria-label="Main Navigation">
+                <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">New Notification</a>
+                <a href="{{ url_for('list_notifications') }}" class="{% if request.endpoint in ['list_notifications', 'get_notification'] %}active{% endif %}">Notification History</a>
+            </nav>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" role="region" aria-label="Alerts">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {% if category == 'success' %}
+                                <svg style="width: 20px; height: 20px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            {% else %}
+                                <svg style="width: 20px; height: 20px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            {% endif %}
+                            <div>{{ message }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if custom_error_title %}
+            <div class="detail-card" style="padding: 2.5rem; text-align: center;">
+                <h2>{{ custom_error_title }}</h2>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">{{ custom_error_message }}</p>
+                <div style="margin-top: 1.5rem;">
+                    <a href="{{ url_for('index') }}" class="btn">Return to Home</a>
+                </div>
+            </div>
+        {% endif %}
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        // Minimal client-side helper: Trim form fields before submission
+        document.addEventListener('DOMContentLoaded', function () {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(function (form) {
+                form.addEventListener('submit', function () {
+                    const inputs = form.querySelectorAll('input[type="text"], input[type="email"], textarea');
+                    inputs.forEach(function (input) {
+                        input.value = input.value.trim();
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
